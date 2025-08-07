@@ -1,0 +1,15 @@
+//Firefly
+FIREFLY_API_KEY =
+FIREFLY_BASE_URL = https://firefly-api.adobe.io
+
+AIO_POSTPHOTOSHOP_ACTION = 
+AIO_STORAGE_ACTION = 
+AIO_FIREFLY_ACTION = 
+AIO_BANNER_AT_SCALE_ACTION = 
+
+EXPRESS_SESSION_SECRET = abc
+
+//swagger
+SWAGGER_HOST = localhost:5000
+
+documentManifestURL = /documentManifest
