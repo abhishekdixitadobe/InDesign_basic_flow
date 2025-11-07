@@ -62,7 +62,7 @@ const Upload = () => {
   const handleAPIRequest = async () => {
     let results = [];
     switch (apiEndpoint) {
-      case "/api/indesignDataMerge":
+      case "indesignDataMerge":
         results = await dataMerge(uploadFiles, formData.action, formData.operation)
         break
       default:

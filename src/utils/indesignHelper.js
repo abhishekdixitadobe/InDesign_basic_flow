@@ -35,65 +35,18 @@ export const renditionOutputOptions = [
     }
 ]
 
-const buildPayload = (preSignedUrlsArr, action) => {
 
-    const indesignFile = preSignedUrlsArr.filter((obj) => obj.name.endsWith('.indd'))
-    const csvFile = preSignedUrlsArr.filter((obj) => obj.name.endsWith('.csv'))
-    const assets = preSignedUrlsArr.map((signedUrl) => {
-        return {
-            "source": {
-                "url": signedUrl.url
-            },
-            "destination": signedUrl.name
-        }
-    })
-    return {
-        "assets": assets,
-        "params": {
-            "dataSource": csvFile[0].name,
-            "targetDocument": indesignFile[0].name,
-            "outputMediaType": action
-        }
-    }
-}
+export const dataMerge = async (uploadedFiles, action, operation) => {
+    const formData = new FormData();
+    uploadedFiles.forEach((file) => formData.append("files", file));
+    formData.append("action", action);
+    formData.append("operation", operation);
+    const res = await fetch("/middleware/upload-and-process", {
+        method: "POST",
+        body: formData,
+    });
 
-const buildRenditionPayload = (preSignedUrlsArr, action) => {
-    const indesignFile = preSignedUrlsArr.filter((obj) => obj.name.endsWith('.indd'))
-    return {
-        "assets": [
-            {
-                "source": {
-                    "url": indesignFile[0].url
-                },
-                "destination": indesignFile[0].name
-            }
-        ],
-        "params": {
-            "targetDocuments": [
-                indesignFile[0].name
-            ],
-            "outputMediaType": action
-        }
-    }
-}
-const makeCalltoWebHook = async (presignedUrls, action, operation) => {
-    const endpoint = operation === 'data-merge' ? 'merge-data' : 'create-rendition'
-    const payload = operation === 'data-merge' ? buildPayload(presignedUrls, action) : buildRenditionPayload(presignedUrls, action)
-    const result = await axios.post("https://hook.fusion.adobe.com/enxjyg96ti56d8piy1ztn4as4kwcd5jr", {
-        endpoint,
-        payload
-    }, {
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    return result.data
-}
-
-export const dataMerge = async (updloadedFiles, action, operation) => {
-    const results = await Promise.all(updloadedFiles.map((file) => getPresignedURL(file, file.name)))
-    const downloadUrls = await makeCalltoWebHook(results, action, operation)
-    const result = downloadUrls.outputs.map((elm) => elm.destination.url)
-    return result
+    const data = await res.json();
+    return data.resultURLs; // array of final URLs
 
 } 

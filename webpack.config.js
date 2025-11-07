@@ -109,6 +109,12 @@ module.exports = {
         changeOrigin: true,
         secure: false,
       },
+       {
+        context: ["/middleware"],
+        target: "http://localhost:3000", // Backend server
+        changeOrigin: true,
+        secure: false,
+      },
     ],
   },
   devtool: "inline-source-map",

@@ -10,7 +10,7 @@ const useCaseData = [
     configs: {
       page: "/upload",
       formComponentId: "IndesignDocs",
-      api: "/api/indesignDataMerge",
+      api: "indesignDataMerge",
     },
     isDisabled: false,
   }
